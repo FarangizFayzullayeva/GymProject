@@ -8,6 +8,7 @@ protected:
     string username;
     string password;
     string email;
+    string userType;       // "Member", "Admin"
     int age;
     double weight;        // in kg
     double height;        // in cm
@@ -16,11 +17,12 @@ protected:
     string membershipId;
     string experience;
 public:
-    // getter settert
+    // getter setters
     string getUserId() const;
     string getUsername() const;
     string getPassword() const;
     string getEmail() const;
+    string getUserType() const;
     int getAge() const;
     double getWeight() const;
     double getHeight() const;
@@ -29,6 +31,7 @@ public:
     string getMembershipId() const;
     string getExperience() const;
     void setUserId();
+    void setUserType();
     void setUsername();
     void setPassword();
     void setEmail();
@@ -44,4 +47,10 @@ public:
     virtual void displayProfile() const;  // Polymorphism - virtual function
     void updateProfile();
     // login/register
+    virtual ~User() {}
+};
+class Admin : public User {
+public:
+    void displayProfile() const override;  // Override for Admin profile display
+    void manageUsers();  // Admin-specific function to manage users
 };
