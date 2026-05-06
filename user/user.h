@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 #include <iostream>
@@ -16,7 +17,7 @@ protected:
     char gender;       // "M", "F", "O" (Other)
     char fitnessLevel[15];  // "Beginner", "Intermediate", "Advanced"
     char membershipId[10];
-    char experience[10];
+    int experience;      // in years, for trainers
 public:
     // getter setters
     string getUserId() const;
@@ -30,7 +31,7 @@ public:
     char getGender() const;
     string getFitnessLevel() const;
     string getMembershipId() const;
-    string getExperience() const;
+    int getExperience() const;
     void setUserId(string IdUser);
     void setUserType(string typeUser);
     void setUsername(string name);
@@ -42,7 +43,7 @@ public:
     void setGender(char gen);
     void setFitnessLevel(string lvl);
     void setMembershipId(string memId);
-    void setExperience(string exp);
+    void setExperience(int exp);
 
     // Member Functions
     virtual void displayProfile() const;  // Polymorphism - virtual function
@@ -50,7 +51,7 @@ public:
     void deleteProfile();
     // login/register
 
-   User(string IdUser = "", string typeUser="", string name = "", string passwrd = "", string mail = "", int Age = 0, double Weight = 0.0, double Height = 0.0, char gen = 'O', string lvl = "", string memId = "", string exp = "") {
+   User(string IdUser = "", string typeUser="", string name = "", string passwrd = "", string mail = "", int Age = 0, double Weight = 0.0, double Height = 0.0, char gen = 'O', string lvl = "", string memId = "", int exp = 0) {
         setUserId(IdUser);
         setUserType(typeUser);
         setUsername(name);
@@ -170,11 +171,8 @@ void User::setMembershipId(string memId){
             membershipId[i] = memId[i];
     membershipId[length] = '\0';
 }
-void User::setExperience(string exp){
-    int length = (exp.size() < 10) ? exp.size() : 9;
-    for (int i = 0; i < length; ++i)
-            experience[i] = exp[i];
-    experience[length] = '\0';
+void User::setExperience(int exp){
+    experience = exp;
 }
 string User::getUserId() const {
     return userId;
@@ -209,7 +207,7 @@ string User::getFitnessLevel() const {
 string User::getMembershipId() const {
     return membershipId;
 } 
-string User::getExperience() const {
+int User::getExperience() const {
     return experience;
 }
 
