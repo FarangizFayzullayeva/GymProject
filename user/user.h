@@ -6,7 +6,7 @@ using namespace std;
 
 class User {
 protected:
-    char userId[10];
+    int userId;
     char username[30];
     char password[15];
     char email[50];
@@ -20,7 +20,8 @@ protected:
     int experience;      // in years, for trainers
 public:
     // getter setters
-    string getUserId() const;
+
+    int getUserId() const;
     string getUsername() const;
     string getPassword() const;
     string getEmail() const;
@@ -32,7 +33,7 @@ public:
     string getFitnessLevel() const;
     string getMembershipId() const;
     int getExperience() const;
-    void setUserId(string IdUser);
+    void setUserId(int IdUser);
     void setUserType(string typeUser);
     void setUsername(string name);
     void setPassword(string passwrd);
@@ -44,6 +45,7 @@ public:
     void setFitnessLevel(string lvl);
     void setMembershipId(string memId);
     void setExperience(int exp);
+    
 
     // Member Functions
     virtual void displayProfile() const;  // Polymorphism - virtual function
@@ -51,7 +53,7 @@ public:
     void deleteProfile();
     // login/register
 
-   User(string IdUser = "", string typeUser="", string name = "", string passwrd = "", string mail = "", int Age = 0, double Weight = 0.0, double Height = 0.0, char gen = 'O', string lvl = "", string memId = "", int exp = 0) {
+   User(int IdUser = 0, string typeUser="", string name = "", string passwrd = "", string mail = "", int Age = 0, double Weight = 0.0, double Height = 0.0, char gen = 'O', string lvl = "", string memId = "", int exp = 0) {
         setUserId(IdUser);
         setUserType(typeUser);
         setUsername(name);
@@ -64,6 +66,7 @@ public:
         setFitnessLevel(lvl);
         setMembershipId(memId);
         setExperience(exp);
+       
     }
     virtual ~User() {}
 };
@@ -89,11 +92,9 @@ class Trainer : public User{
     void displayProfile() const override;
 };
 
-void User::setUserId(string IdUser){
-    int length = (IdUser.size() < 10) ? IdUser.size() : 9;
-    for (int i = 0; i < length; ++i)
-            userId[i] = IdUser[i];
-    userId[length] = '\0';
+
+void User::setUserId(int IdUser){
+    userId = IdUser;
 }
 void User::setUserType(string typeUser){
     // if(typeUser != "Member" && typeUser != "Admin" && typeUser != "Trainer"){
@@ -174,7 +175,8 @@ void User::setMembershipId(string memId){
 void User::setExperience(int exp){
     experience = exp;
 }
-string User::getUserId() const {
+
+int User::getUserId() const {
     return userId;
 }
 string User::getUsername() const {

@@ -5,19 +5,30 @@ using namespace std;
 #include <fstream>
 #include <iomanip>
 int enterChoiceMenu();
-void Register();
+void Register(fstream& outUserInfo);
 void Login();
 int main(){
-fstream outUserInfo("userInfo.dat", ios::binary | ios::in | ios::out| ios::app); 
+fstream outUserInfo("userInfo.dat", ios::in | ios::out | ios::binary);
+
 if (!outUserInfo) {
-        cerr << "File could not be opened." << endl;
-        exit(1);
+    ofstream createFile("userInfo.dat", ios::binary);
+    User emptyUser;
+    for (int i = 0; i < 100; i++) {
+        createFile.write(reinterpret_cast<char*>(&emptyUser), sizeof(User));
+    }
+    createFile.close();
+    outUserInfo.open("userInfo.dat", ios::in | ios::out | ios::binary);
 }
+if (!outUserInfo) {
+    cerr << "File could not be opened.\n";
+    return 1;
+}
+   
 int choice;
 while ((choice = enterChoiceMenu()) != 3) {
     switch(choice){
     case 1:
-        Register();
+        Register(outUserInfo);
         break;
     case 2:
         Login();
@@ -38,14 +49,30 @@ int enterChoiceMenu(){
     cin >> choice;
     return choice;
 }
-void Register(){
-    string userId, userType, username, password, email, fitLvl, memId;
-    int age, expYears;
+void Register(fstream& outUserInfo){
+    string userType, username, password, email, fitLvl, memId;
+    int age, expYears, userId;
     char gender;
     double weight,height;
     cout << "Registering a new user..." << endl;
     cout << "\nEnter your User ID: ";
     cin >> userId;
+    outUserInfo.clear();
+    outUserInfo.seekg((userId - 1) * sizeof(User), ios::beg);
+    User user;
+    int i = 0;
+    outUserInfo.read(reinterpret_cast<char*>(&user), sizeof(User));
+
+    while(user.getUserId() != 0) {
+        cout << "Account with the ID #" << userId << " already exists." << endl;
+        cout << "Please enter a different User ID: ";
+        cin >> userId;
+        outUserInfo.clear();
+        outUserInfo.seekg((userId - 1) * sizeof(User), ios::beg);
+        outUserInfo.read(reinterpret_cast<char*>(&user), sizeof(User));
+
+    }
+
     cout << "\nEnter your User Type(Member/Admin/Trainer): ";
     cin >> userType;
     while(userType != "Member" && userType != "Admin" && userType != "Trainer"){
@@ -111,4 +138,18 @@ void Register(){
         cin >> expYears;
     }
 User newUser(userId, userType, username, password, email, age, weight, height, gender, fitLvl, memId, expYears);
+  outUserInfo.seekp((userId - 1) * sizeof(User), ios::beg);
+
+        outUserInfo.write(reinterpret_cast< char*>(&newUser), sizeof(User));
+}
+
+void initializeFile(fstream& file) {
+    file.clear();
+    file.seekp(0);
+
+    User emptyUser; // default user = empty record
+
+    for (int i = 0; i < 100; i++) {
+        file.write(reinterpret_cast<char*>(&emptyUser), sizeof(User));
+    }
 }
